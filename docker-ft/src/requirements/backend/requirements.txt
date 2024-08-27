@@ -1,0 +1,10 @@
+django
+django-extensions
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+pillow
+pyotp
+certifi
+requests
+channels[daphne]
