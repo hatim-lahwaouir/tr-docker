@@ -8,6 +8,6 @@ COPY --chmod=111 run.sh /tmp/
 COPY --chmod=444  requirements.txt /tmp/
 
 
-RUN /tmp/setup.sh
+RUN ["/tmp/setup.sh"]
 
 ENTRYPOINT ["/tmp/run.sh"]

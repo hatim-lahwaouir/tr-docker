@@ -1,17 +1,18 @@
 services:
   backend:
+    image: backend
     container_name: backend
     build: ./requirements/backend
     volumes:
-      - backend-code:/app
+      - backend_code:/app
 
 
 
 volumes:
-  backend-code:
-    driver: local # Define the driver and options under the volume name
+  backend_code:
+    driver: local 
     driver_opts:
       type: none
-      device: ./requirements/backend/src 
+      device: ./requirements/backend/backend_app/ 
       o: bind
 
