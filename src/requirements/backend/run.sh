@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /app/backend_app/
+cd /app/backend/
 
 
 python3 manage.py makemigrations

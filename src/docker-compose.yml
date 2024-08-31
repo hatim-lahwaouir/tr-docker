@@ -13,6 +13,6 @@ volumes:
     driver: local 
     driver_opts:
       type: none
-      device: ./requirements/backend/backend_app/ 
+      device: /goinfre/hlahwaou/tr-docker/src/requirements/backend/backend_app/ 
       o: bind
 
