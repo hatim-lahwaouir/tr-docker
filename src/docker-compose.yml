@@ -5,6 +5,12 @@ services:
     build: ./requirements/backend
     volumes:
       - backend_code:/app
+  frontend:
+    image: frontend
+    container_name: frontend
+    build: ./requirements/frontend
+    volumes:
+      - frontend_code:/app
 
 
 
@@ -13,6 +19,12 @@ volumes:
     driver: local 
     driver_opts:
       type: none
-      device: /goinfre/hlahwaou/tr-docker/src/requirements/backend/backend_app/ 
+      device: /goinfre/${USER}/tr-docker/src/requirements/backend/app/ 
       o: bind
 
+  frontend_code:
+    driver: local
+    driver_opts:
+      type: none
+      device: /goinfre/${USER}/tr-docker/src/requirements/frontend/app/
+      o: bind
