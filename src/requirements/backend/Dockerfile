@@ -1,5 +1,5 @@
 FROM debian:11
-
+EXPOSE 8000
 
 COPY --chmod=111 setup.sh /tmp/
 

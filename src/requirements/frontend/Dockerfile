@@ -1,6 +1,6 @@
 FROM alpine:3.18
 
-
+EXPOSE 5173
 
 COPY --chmod=111 setup.sh /tmp/
 COPY --chmod=111 run.sh /tmp/

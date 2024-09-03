@@ -5,12 +5,24 @@ services:
     build: ./requirements/backend
     volumes:
       - backend_code:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - netw
+
+
+
   frontend:
     image: frontend
     container_name: frontend
     build: ./requirements/frontend
+    ports:
+      - "5173:5173"
     volumes:
       - frontend_code:/app
+    networks:
+      - netw
+
 
 
 
@@ -28,3 +40,6 @@ volumes:
       type: none
       device: /goinfre/${USER}/tr-docker/src/requirements/frontend/app/
       o: bind
+
+networks:
+  netw:
