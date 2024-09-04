@@ -9,6 +9,10 @@ RUN ["apk", "update"]
 RUN ["apk", "add", "nodejs"]
 RUN ["apk", "add", "npm"]
 
+COPY --chmod=777 ./app/frontend/package.json /
+RUN ["npm", "i"]
+RUN ["npm", "audit", "fix"]
+
 COPY --chmod=111 run.sh /tmp/
 
 
