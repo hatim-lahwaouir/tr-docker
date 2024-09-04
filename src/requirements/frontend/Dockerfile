@@ -2,12 +2,14 @@ FROM alpine:3.18
 
 EXPOSE 5173
 
-COPY --chmod=111 setup.sh /tmp/
+
+
+
+RUN ["apk", "update"]
+RUN ["apk", "add", "nodejs"]
+RUN ["apk", "add", "npm"]
+
 COPY --chmod=111 run.sh /tmp/
-COPY --chmod=444 package-lock.json  / 
-COPY --chmod=444 package.json  /
-
-RUN ["/tmp/setup.sh"]
 
 
-ENTRYPOINT ["/tmp/run.sh"]
+CMD ["/tmp/run.sh"]

@@ -1,3 +1,9 @@
 #!/bin/sh
-cd /app
-npm run dev
+
+
+
+cd /app/frontend
+npm i
+npm audit fix
+
+exec npm run dev
