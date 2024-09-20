@@ -9,7 +9,8 @@ services:
       - "8000:8000"
     networks:
       - netw
-
+    env_file:
+      - .env
 
 
   frontend:
@@ -18,8 +19,19 @@ services:
     build: ./requirements/frontend
     ports:
       - "5173:5173"
-    volumes:
-      - frontend_code:/app
+    networks:
+      - netw
+  db:
+    container_name: db
+    image: postgres:15.8-alpine3.20
+    # volumes:
+      # - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+    env_file:
+      - .env
     networks:
       - netw
 
@@ -34,12 +46,7 @@ volumes:
       device: /goinfre/${USER}/tr-docker/src/requirements/backend/app/ 
       o: bind
 
-  frontend_code:
-    driver: local
-    driver_opts:
-      type: none
-      device: /goinfre/${USER}/tr-docker/src/requirements/frontend/app/
-      o: bind
+  # postgres_data:
 
 networks:
   netw:
