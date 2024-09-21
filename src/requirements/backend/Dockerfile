@@ -7,6 +7,7 @@ COPY --chmod=111 run.sh /tmp/
 
 COPY --chmod=444  requirements.txt /
 
+COPY app /app
 
 
 ENV PYTHONDONTWRITEBYTECODE 1
