@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s  # Set the default scrape interval to every 15 seconds
+
+scrape_configs:
+  # Scrape Prometheus itself
+  # Scrape the backend service
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['backend:8000']
+  
+
+  # Scrape the nginx service
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx_exporter:9113']
+
+  - job_name: 'db'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
