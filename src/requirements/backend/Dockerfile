@@ -17,6 +17,8 @@ RUN ["apk", "update"]
 RUN ["apk", "add", "python3"]
 RUN ["apk", "add", "py-pip"]
 
+COPY app app
+
 RUN ["pip3", "install" , "-r", "requirements.txt"]
 
 
