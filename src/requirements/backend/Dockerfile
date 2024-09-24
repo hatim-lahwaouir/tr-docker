@@ -1,14 +1,13 @@
 FROM alpine:3.18
 EXPOSE 8000
 
+USER root
+
 COPY --chmod=111 setup.sh /tmp/
 
 COPY --chmod=111 run.sh /tmp/
 
 COPY --chmod=444  requirements.txt /
-
-COPY app /app
-
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
