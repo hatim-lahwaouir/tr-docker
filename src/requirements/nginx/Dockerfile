@@ -14,6 +14,8 @@ WORKDIR  "/app/frontend/"
 RUN ["npm", "i"]
 RUN ["npm", "run", "build"]
 
+COPY --chmod=111 certif_setup.sh /tmp/
 
+RUN ["/tmp/certif_setup.sh"]
 
-EXPOSE 80
+EXPOSE 443
