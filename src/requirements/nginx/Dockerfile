@@ -1,5 +1,5 @@
 FROM nginx:stable-alpine3.20-otel
-
+USER root
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
 
@@ -9,13 +9,21 @@ RUN ["apk", "add", "nodejs"]
 RUN ["apk", "add", "npm"]
 
 COPY  app  /app
-COPY .env /app/frontend/
 WORKDIR  "/app/frontend/"
+ARG BACKEND_HOST
+ENV BACKEND_HOST=${BACKEND_HOST}
+
+RUN echo "export const theHost = 'https://$BACKEND_HOST'; export const port = 443; export const wsHost = '$BACKEND_HOST';" >  /app/frontend/src/config.ts
+
+
+
 RUN ["npm", "i"]
 RUN ["npm", "run", "build"]
 
 COPY --chmod=111 certif_setup.sh /tmp/
-
 RUN ["/tmp/certif_setup.sh"]
+
+
+
 
 EXPOSE 443

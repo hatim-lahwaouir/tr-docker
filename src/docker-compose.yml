@@ -3,9 +3,6 @@ services:
     image: backend
     container_name: backend
     build: ./requirements/backend
-    expose:
-      - 8000
-      - 8001
     networks:
       - netw
     env_file:
@@ -18,15 +15,19 @@ services:
 
 
   nginx:
-    build: ./requirements/nginx
+    build: 
+      context: ./requirements/nginx/
+      args:
+          - BACKEND_HOST=${BACKEND_HOST}
     container_name: nginx
+    image : nginx
     ports:
       - 443:443
     env_file:
       - .env
     volumes:
       - media:/home/app/web/staticfiles
-      - frontend:/app
+      # - frontend:/app
     depends_on:
       - backend
     networks:
@@ -46,7 +47,7 @@ services:
 volumes:
   media:
   postgres_data:
-  frontend:
+  # frontend:
   backend:
     name: db_vol
     driver: local

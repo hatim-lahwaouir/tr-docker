@@ -15,8 +15,6 @@ CRT=crt.crt
 
 mkdir -p $CRT_DIR $PRIV_KEY_DIR $CSR_DIR 
 mkdir -p /app
-# chown -R nginx:www-data /app
-# chmod -R 755 /app
 
 
 
