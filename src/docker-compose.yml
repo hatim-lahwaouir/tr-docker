@@ -19,6 +19,7 @@ services:
       context: ./requirements/nginx/
       args:
           - BACKEND_HOST=${BACKEND_HOST}
+          - URL_42=${URL_42}
     container_name: nginx
     image : nginx
     ports:

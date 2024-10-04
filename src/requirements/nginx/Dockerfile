@@ -12,8 +12,15 @@ COPY  app  /app
 WORKDIR  "/app/frontend/"
 ARG BACKEND_HOST
 ENV BACKEND_HOST=${BACKEND_HOST}
+ARG URL_42
+ENV URL_42=${URL_42}
 
-RUN echo "export const theHost = 'https://$BACKEND_HOST'; export const port = 443; export const wsHost = '$BACKEND_HOST';" >  /app/frontend/src/config.ts
+
+
+RUN echo "export const theHost = 'https://$BACKEND_HOST'; \
+export const port = 443; \
+export const wsHost = '$BACKEND_HOST'; \
+export const url42 = '$URL_42';" > /app/frontend/src/config.ts
 
 
 
