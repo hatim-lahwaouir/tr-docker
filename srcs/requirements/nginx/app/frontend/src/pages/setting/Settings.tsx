@@ -9,9 +9,7 @@ import { IoGameController } from "react-icons/io5";
 import Password from "./Password";
 import Security from "./Security";
 import GameSettings from "./GameSettings"
-
-
-
+import RPSSettings from "./RPSSettings";
 
 function SettingNew() {
 	const {isWide, setBarTop} = useNavbarContext();
@@ -78,7 +76,7 @@ function SettingNew() {
 								<div className="hover:bg-[#dddddd] dark:hover:bg-[#333333] w-full h-11 items-center flex cursor-pointer mobile:rounded-xl"onClick={
 									()=>{
 										setIsActive(true)
-										setSelectedState("Game Settings");
+										setSelectedState("Ping Pong Settings");
 									}
 									}>
 									<div className="ml-4 flex items-center dark:text-white text-xl justify-between flex-1 mr-5"> 
@@ -86,7 +84,24 @@ function SettingNew() {
 											<div>
 												<IoGameController />
 											</div>
-											<div>Game Settings</div>
+											<div>Ping Pong Settings</div>
+											
+										</div>
+										{!isWide && <IoIosArrowForward />}
+									</div>
+								</div>
+								<div className="hover:bg-[#dddddd] dark:hover:bg-[#333333] w-full h-11 items-center flex cursor-pointer mobile:rounded-xl"onClick={
+									()=>{
+										setIsActive(true)
+										setSelectedState("RPS Settings");
+									}
+									}>
+									<div className="ml-4 flex items-center dark:text-white text-xl justify-between flex-1 mr-5"> 
+										<div className="flex gap-3 items-center ">
+											<div>
+												<IoGameController />
+											</div>
+											<div>RPS Settings</div>
 											
 										</div>
 										{!isWide && <IoIosArrowForward />}
@@ -103,7 +118,7 @@ function SettingNew() {
 
 	useEffect(() => {
 		document.title = 'Settings';
-	  }, []);
+	}, []);
 	
 	return ( <>
 		<div className="min-h-screen flex flex-col  text-black dark:text-white bg-white dark:bg-black">
@@ -123,7 +138,8 @@ function SettingNew() {
 										</div>}
 										{selectedState === 'Account Information' && <AccountInfo/>}
 										{selectedState === 'Password' && <Password/>}
-										{selectedState === 'Game Settings' && <GameSettings/>}
+										{selectedState === 'Ping Pong Settings' && <GameSettings/>}
+										{selectedState === 'RPS Settings' && <RPSSettings/>}
 										{selectedState === 'Security' && <Security/>} 
 								</div>
 							</div>

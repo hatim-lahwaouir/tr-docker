@@ -418,14 +418,14 @@ const playersAnimation=()=>{
                   <div className="flex justify-between items-center w-full mb-4 text-2xl text-white">
                     <div className='flex items-center gap-2'>
                       <img src={player1pic} alt="" className="rounded-full w-10"/>
-                      <div className='text-xl'>{Player1}</div>
+                      <div className='text-xl dark:text-white text-black'>{Player1}</div>
                     </div>
                     <div className='flex gap-4'>
                       <div className="text-blue-500 text-2xl">{player1score}</div>
                       <div className="text-red-500 text-2xl">{player2score}</div>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <div className='text-xl'>{Player2}</div>
+                      <div className='dark:text-white text-black text-xl'>{Player2}</div>
                       <img src={player2pic} alt="" className="rounded-full w-10"/>
                     </div>
                   </div>

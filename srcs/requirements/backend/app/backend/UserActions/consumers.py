@@ -4,12 +4,15 @@ from asgiref.sync import sync_to_async, async_to_sync
 from channels.generic.websocket import WebsocketConsumer,AsyncWebsocketConsumer
 from Models.models import User
 from Models.models import Messages, FriendshipStatus, Notification
-from django.db.models import Q,F, Prefetch
+from django.db.models import Q, F, Prefetch
 from channels.db import database_sync_to_async
 from Game.serializers import UserSerializer
 from .serializers import UserInfo
 from Game.models import Match
-
+from .models import InviteQueue
+from django.utils import timezone
+from datetime import timedelta
+from Game.models import Tournament,Match
 
 online_users = {}
 
@@ -55,7 +58,7 @@ class UserManagement(WebsocketConsumer):
             receiver:
         '''
         receiver = self.get_user(text_data_json.get('receiver'))
-
+        self.user.refresh_from_db()
 
         if receiver is None:
             return 
@@ -82,7 +85,7 @@ class UserManagement(WebsocketConsumer):
         if action_type == 'decline':
             self.logic_of_accepting_declining(text_data_json, 'decline', receiver)
         if action_type in ('unfriend', 'block', 'unblock'):
-            self.logic_of_relation_status(text_data_json, action_type, receiver) 
+            self.logic_of_relation_status(text_data_json, action_type, receiver)
         if action_type in ('gameInvite', 'declineGameInvite', 'acceptGameInvite'):
             self.logic_of_game(text_data_json, action_type, receiver)
 
@@ -103,9 +106,11 @@ class UserManagement(WebsocketConsumer):
         senderdata = UserSerializer(self.user)
         receiverdata = UserSerializer(receiver)
 
-        if action_type == 'gameInvite' and self.user.sentInvite == False:
-            self.user.sentInvite = True
-            self.user.save()
+        time_threshold = timezone.now() - timedelta(seconds=10)
+        if action_type == 'gameInvite':
+            if InviteQueue.objects.filter(Q(sender=self.user) | Q(receiver=self.user), status='P' ,time__gte=time_threshold).exists() or InviteQueue.objects.filter(Q(sender=receiver) | Q(receiver=receiver), status='P',time__gte=time_threshold).exists():
+                return
+            f = InviteQueue.objects.create(sender=self.user, receiver=receiver,status='P')
             async_to_sync(self.channel_layer.group_send)(
                 str(receiver.id)+'_user', {
                                 "type": "game.invite",
@@ -114,11 +119,14 @@ class UserManagement(WebsocketConsumer):
                                 "status":"send"
                                 }
             )
+
+
         if action_type == 'declineGameInvite':
-            self.user.sentInvite = False
-            receiver.sentInvite = False
-            receiver.save()
-            self.user.save()
+            inv = InviteQueue.objects.filter(sender=receiver, receiver=self.user ,time__gte=time_threshold, status='P').first()
+            if inv is None:
+                return
+            inv.status = 'D'
+            inv.save()
             async_to_sync(self.channel_layer.group_send)(
                 str(receiver.id)+'_user' , {
                                     "type": "game.invite",
@@ -128,20 +136,32 @@ class UserManagement(WebsocketConsumer):
                                     }
             )
 
+        
         if action_type == 'acceptGameInvite':
-            self.user.sentInvite = False
-            receiver.sentInvite = False
-            receiver.save()
-            self.user.save()
-            async_to_sync(self.channel_layer.group_send)(
-                str(receiver.id)+'_user', {
-                                    "type": "game.invite",
-                                    "sender": senderdata.data,
-                                    "receiver": receiverdata.data,
-                                    "gameId": text_data_json["gameId"],
-                                    "status": "accept",
-                                    }
-            )
+            lastInvit = InviteQueue.objects.filter(sender=receiver,receiver=self.user, status='P' ,time__gte=time_threshold).first()
+            if lastInvit and lastInvit.status == 'P':
+                lastInvit.status = 'A'
+                lastInvit.save()
+                gameId = self.creat_game(receiver)
+                async_to_sync(self.channel_layer.group_send)(
+                    str(receiver.id)+'_user', {
+                                        "type": "game.invite",
+                                        "sender": receiverdata.data,
+                                        "receiver": senderdata.data,
+                                        "gameId": gameId,
+                                        "status": "accept",
+                                        }
+                )
+                async_to_sync(self.channel_layer.group_send)(
+                    str(self.user.id)+'_user', {
+                                        "type": "game.invite",
+                                        "sender": receiverdata.data,
+                                        "receiver": senderdata.data,
+                                        "gameId": gameId,
+                                        "status": "accept",
+                                        }
+                )
+    
 
 
     def logic_of_conversations(self, event, receiver):
@@ -174,6 +194,7 @@ class UserManagement(WebsocketConsumer):
             if obj:
                 obj.delete()
             FriendshipStatus.objects.create(sender=self.user, receiver=receiver, status='BL')
+            Messages.objects.filter(Q(sender=self.user, receiver=receiver) | Q(sender=receiver, receiver=self.user) ).delete()
         elif status == 'unfriend' and obj:
             obj.delete()
         elif obj and status == 'unblock'  and obj.sender.id == self.user.id:
@@ -380,6 +401,19 @@ class UserManagement(WebsocketConsumer):
                                 "status": "offline", 
                                 }
                 )
+
+    def creat_game(self, receiver):
+        match = Match.objects.create(player = self.user, opponent = receiver)
+        if type == 'tr':
+            match.tournament = Tournament.objects.get(pk=int(request.data.get('trId')))
+        match.save()
+        self.user.games += 1
+        receiver.games += 1
+        self.user.save()
+        receiver.save()
+        return match.id 
+
+
     def cant_talk(self, receiver):
         return FriendshipStatus.objects.filter(Q(sender=self.user, receiver=receiver) | Q(sender=receiver, receiver=self.user), status='BL').exists()
  

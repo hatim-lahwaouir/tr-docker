@@ -44,81 +44,7 @@ function GameSettings() {
 
 	useEffect(() => {
 		document.title = "Settings | Game";
-	  }, []);
-
-	// const fetchingGameData = async ()=>{
-	// 	setIsLoading(true);
-	// 	try {
-	// 		const response = await fetch(`${theHost}:${port}/api/game/settings/`, {
-	// 			method: 'GET',
-	// 			headers: {
-	// 			'Content-Type': 'application/json',
-	// 			'Authorization': `Bearer ${localStorage.getItem('access')}`,
-	// 			}
-	// 		});
-			
-	// 		if (!response.ok) {
-	// 			throw new Error('Failed to fetch me');
-	// 		}
-			
-	// 		const result = await response.json();
-	// 		setBallColor(result.ballc)
-	// 		setPaddleColor(result.paddlec)
-	// 		setTableColor(result.tablec)
-	// 		setdefaultBallColor(result.ballc)
-	// 		setdefaultPaddleColor(result.paddlec)
-	// 		setdefaultTableColor(result.tablec)
-			
-	// 	} catch (error:any) {
-	// 			console.error('Error:', error.message);
-	// 		}
-	// 		finally{
-				
-	// 			setIsLoading(false)
-	// 		}
-	// }
-	// const toastUP = (type:Boolean, msg:string)=>{
-	// 	if (type)
-	// 		toast.success(msg,{containerId:'Colorchange'});
-	// 	else 
-	// 		toast.error(msg, {containerId:'Colorchange'});
-	// }
-	// const PostGameData = async ()=>{
-	// 	setIsLoading(true);
-	// 	try {
-	// 		const response = await fetch(`${theHost}:${port}/api/game/settings/`, {
-	// 			method: 'POST',
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 				'Authorization': `Bearer ${localStorage.getItem('access')}`,
-	// 			},
-	// 			body: JSON.stringify({
-	// 				ballc: ballColor,
-	// 				tablec: tableColor,
-	// 				paddlec: paddleColor
-	// 			}),
-	// 		});
-			
-	// 		if (!response.ok) {
-	// 			throw new Error('Failed to fetch me');
-	// 		}
-
-	// 		setGameSetting({
-	// 			ballColor: `#${ballColor}`,
-	// 			paddleColor: `#${paddleColor}`,
-	// 			tableColor: `#${tableColor}`,
-	// 		});
-	// 		setdefaultBallColor(ballColor)
-	// 		setdefaultPaddleColor(paddleColor)
-	// 		setdefaultTableColor(tableColor)			
-	// 		setisSuccess(true);
-	// 	} catch (error:any) {
-	// 			console.error('Error:', error.message);
-	// 		}
-	// 		finally{
-	// 			setIsLoading(false)
-	// 		}
-	// }
+	}, []);
 
 	const fetchingGameData = async () => {
 		setIsLoading(true);
@@ -230,7 +156,7 @@ function GameSettings() {
 				setPaddleColor(defaultPaddleColor);
 			}}
 			>
-				{ isWide && <div className="flex items-center  justify-center  font-bold text-4xl text-center mb-5">Game Settings</div>}
+				{ isWide && <div className="flex items-center  justify-center  font-bold text-4xl text-center mb-5">Ping Pong Settings</div>}
 				<PingPongGame ball={ballColor} paddle={paddleColor} table={tableColor}/>
 				<div className="flex mt-4 mb-4 w-full justify-center">
 					<div className=" flex  flex-col gap-4">

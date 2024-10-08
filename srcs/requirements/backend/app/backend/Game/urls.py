@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from .views import (
-    matchId,
+    # matchId,
     userListing,
     gameStats,
     isParticipant,
@@ -23,9 +23,9 @@ urlpatterns = [
     path('isInGame/<int:id>', isInGame.as_view()),
     path('trRegister/', registerParticipant.as_view()),
     path('playerStatus/<int:id>', playerStatus.as_view()),
-    path('stats/<str:playerId>', gameStats.as_view()),
-    path('<str:playerEmail>/<str:opponentEmail>/<str:type>/', matchId.as_view()),
-    path('<str:listByLevel>/', userListing.as_view()),
+    path('stats/<int:playerId>', gameStats.as_view()),
+    # path('<str:playerEmail>/<str:opponentEmail>/<str:type>/', matchId.as_view()),
+    path('listByLevel/', userListing.as_view()),
 
 
 ]

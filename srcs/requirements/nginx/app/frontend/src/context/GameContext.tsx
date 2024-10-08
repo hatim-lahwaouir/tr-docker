@@ -57,6 +57,8 @@ interface GameContextProps {
   Player2 :string;
   setPlayer1: (value: string) => void;
   setPlayer2: (value: string) => void;
+  showWinnerModal: boolean;
+  setShowWinnerModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
@@ -79,6 +81,7 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [Player1, setPlayer1] = useState<string>("Player1");
   const [Player2, setPlayer2] = useState<string>("Player2");
   const userToken = localStorage.getItem('access');
+  const [showWinnerModal, setShowWinnerModal] = useState<boolean>(false);
 
   const getGameSetting = async (): Promise<void> => {
     try {
@@ -116,6 +119,7 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       if (data.type === 'game.invite') {
 		
+        console.log('game.invite', data);
         switch (data.status) {
           case 'send':
             if (data.receiver.username === cookies.userData.username) {
@@ -125,17 +129,20 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             }
             break;
             case 'accept':
-              if (data.receiver.id === player?.id) {
+              setShowWinnerModal(false);
+              if (data.receiver.id === player?.id || data.sender.id === cookies.userData.id) {
+                console.log('accept data', data);
+                
                 //!here accept
-                setOpponent(data.sender);
-                setPlayer(data.receiver);
+                setOpponent(data.receiver);
+                setPlayer(data.sender);
                 setPlayerStatus('not ready');
                 setOpponentStatus('not ready');
                 setBothAccepted(true);
                 setGameId(data.gameId.toString());
 
                 // Connect to the game-specific WebSocket
-                const socket = new WebSocket(`wss://${wsHost}:${port}/ws/game/${data.gameId}/?token=${userToken}`);
+                const socket = new WebSocket(`ws://${wsHost}:${port}/ws/game/${data.gameId}/?token=${userToken}`);
                 
                 socket.onopen = () => {
                   setGameSocket(socket);
@@ -165,8 +172,7 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (gameSocket) {
       const messageHandler = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
-        // console.log('game Socket', data);
-        
+
         switch (data.status) {
           case 'playerReady':
             if (data.sender.id === opponent?.id) {
@@ -224,56 +230,22 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setPlayerStatus('not ready');
     setOpponentStatus('waiting');
 
-	const msg = JSON.stringify({
-		type: 'gameInvite',
-		receiver: invitedPlayer.id,
-	});
+    const msg = JSON.stringify({
+      type: 'gameInvite',
+      receiver: invitedPlayer.id,
+    });
     sendMessage(msg);
   };
   
 const acceptGameInvite = async (player: User) => {
   setIsOpponent(true);
 
-    try {
-      const response = await axiosAuth.post(`/game/${player.email}/${cookies.userData.email}/rg/`);
-      const result = response.data;
-      
-      const gameID = result.id;
-      
-      //! here setting opponent when accepting
-      setOpponent(cookies.userData);
-      setOpponentStatus('not ready');
-      setPlayer(player);
-      setPlayerStatus('not ready');
-      setBothAccepted(true);
-
-      // Connect to the game-specific WebSocket using the server-provided game ID
-      const socket = new WebSocket(`wss://${wsHost}:${port}/ws/game/${gameID}/?token=${userToken}`);
-      
-      socket.onopen = () => {
-        setGameSocket(socket);
-
-        // Send the acceptance message through the new WebSocket
         const msg = JSON.stringify({
           type: 'acceptGameInvite',
           receiver: player.id,
-          gameId: gameID,
         });
-        
-        setBothAccepted(true);
         sendMessage(msg);
-        setGameId(gameID);
-        // Navigate to the game lobby
-        navigate(`/game-lobby/${gameID}`);
-      };
 
-      socket.onclose = () => {
-        setGameSocket(null);
-      };
-
-    } catch (error) {
-      // console.error('Error accepting game invite:', error);
-    }
   };
 
   const declineGameInvite = (sender: User) => {
@@ -283,7 +255,7 @@ const acceptGameInvite = async (player: User) => {
     });
     sendMessage(msg);
   };
-
+  
   const setGameReady = (senderId: string) => {
     if (gameId) {
       const msg = JSON.stringify({
@@ -372,7 +344,6 @@ const acceptGameInvite = async (player: User) => {
         autoClose: 10000,
         hideProgressBar: false,
         closeOnClick: false,
-        pauseOnHover: true,
         draggable: true,
         className: "flex bg-white dark:bg-[#191919] text-[#191919] dark:text-white shadow-lg rounded-lg",
         progressClassName: "!bg-black dark:!bg-white",
@@ -419,6 +390,8 @@ const acceptGameInvite = async (player: User) => {
       Player2,
       setPlayer1,
       setPlayer2,
+      showWinnerModal,
+      setShowWinnerModal,
     }}>
       {children}
       <ToastContainer position="bottom-right" stacked theme="colored" />

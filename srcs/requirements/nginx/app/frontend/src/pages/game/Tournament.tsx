@@ -95,7 +95,7 @@ const Tournament = () =>{
 		if(!isOnTourn && !isLoading)
 			navigate("/game");
 		if(isOnTourn && !isLoading){
-			const socket = new WebSocket(`wss://${wsHost}:${port}/ws/tr/${tournId}/?token=${localStorage.getItem('access')}`);
+			const socket = new WebSocket(`ws://${wsHost}:${port}/ws/tr/${tournId}/?token=${localStorage.getItem('access')}`);
 			
 			socket.onopen = () => {
 			setTournamentSocket(socket);

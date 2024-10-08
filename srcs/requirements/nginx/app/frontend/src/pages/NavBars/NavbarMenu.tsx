@@ -11,6 +11,7 @@ import { axiosAuth } from "../../api/axiosAuth";
 import { port, theHost } from "../../config";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from 'axios';
+import { useGameContext } from "../../context/GameContext";
 
 function NavbarMenu() {
 	
@@ -22,6 +23,7 @@ function NavbarMenu() {
 	const [level, setLevel] = useState();
 	const [profileImg, setProfileImg] = useState('');
 	const [loading, setLoading] = useState<boolean>(false);
+	const { setGameSocket, gameSocket } = useGameContext();
 
   const clearCookies = () => {
     document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -41,6 +43,10 @@ const handleLogout = async () => {
   };
   
   const performLogoutCleanup = () => {
+	if (gameSocket) {
+		setGameSocket(null);
+		gameSocket.close(); 
+	}
 	localStorage.removeItem('refresh');
 	localStorage.removeItem('access');
 	clearCookies();

@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../../context/GameContext'
 import { useWebSocketContext } from '../../context/WebSocketContext'
 import { port, theHost } from '../../config'
+import { toast } from 'react-toastify';
+import { axiosAuth } from '../../api/axiosAuth'
 
 interface ProfileInfoProps {
 	onClose: () => void;
@@ -38,9 +40,41 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ onClose }) => {
 		}
 	}
 
-	const handleInviteToGame = () => {
-		
-		if (ChatInfo.selectedUserChat) {
+	const checkIsInGame = async (id: string) => {
+		try {
+			const response = await axiosAuth.get(`/game/isInGame/${id}`);
+			const result = response.data;
+			return result.isInGame;
+		} catch (error) {
+			// console.error('Error:', error);
+			return false;
+		}
+	};
+
+	const checkIsInTournament = async (id: string) => {
+		try {
+			const response = await axiosAuth.get(`/game/checkTr/${id}`);
+			const result = response.data;
+			return result.isParticipant;
+		} catch (error) {
+			// console.error('Error:', error);
+			return false;
+		}
+	};
+
+	const handleInviteToGame = async () => {
+			if (ChatInfo.selectedUserChat) {
+			const isInTournament = await checkIsInTournament(ChatInfo.selectedUserChat.id.toString());
+			const isInGame = await checkIsInGame(ChatInfo.selectedUserChat.id.toString());
+			if (isInTournament) {
+				toast.warn("You can't invite players while in a tournament.");
+				return;
+			}
+			if (isInGame) {
+				toast.warn("You can't invite players while in a game.");
+				return;
+			}
+
 			const userToInvite: User = {
 				id: ChatInfo.selectedUserChat.id.toString(),
 				username: ChatInfo.selectedUserChat.username,
@@ -130,5 +164,4 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ onClose }) => {
 
 		</>
 	);
-
 };

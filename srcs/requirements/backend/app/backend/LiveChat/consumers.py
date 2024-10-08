@@ -3,7 +3,7 @@ import json
 from asgiref.sync import sync_to_async, async_to_sync
 from channels.generic.websocket import WebsocketConsumer,AsyncWebsocketConsumer
 from Models.models import User
-from Models.models import Messages, FriendshipStatus, Notification
+from Models.models import Messages, FriendshipStatus
 from django.db.models import Q,F, Prefetch
 from channels.db import database_sync_to_async
 # from Game.serializers import UserSerializer

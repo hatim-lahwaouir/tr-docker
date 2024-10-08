@@ -19,12 +19,20 @@ class consumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_tournament(self):
         return Tournament.objects.get(pk=int(self.room_name))
+    @database_sync_to_async
+    def checkUser(self, tr):
+        return tr.participant.filter(id=self.user.id).exists()
     
     async def connect(self):
         self.user = self.scope['user']
         if not self.user.is_authenticated:
             return
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        tr = await self.get_tournament()
+        if tr == None:
+            return
+        if await self.checkUser(tr) == False:
+            return
         self.trType = await self.getTrType()
         self.tr = await self.get_tournament()
         self.room_group_name = f"tr_{self.room_name}"
@@ -132,4 +140,7 @@ class consumer(AsyncWebsocketConsumer):
         print(f"[is in tournament tr finished are set for {self.user.username} ]")
     async def send_data(self, event):
         event.pop('type')
-        await self.send(json.dumps(event))
+        try:
+            await self.send(json.dumps(event))
+        except Exception as e:
+            print(e)

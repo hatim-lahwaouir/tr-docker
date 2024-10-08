@@ -12,27 +12,27 @@ from .models import Match, Tournament, Round
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
-@permission_classes([IsAuthenticated])
-class matchId(APIView):
-    def post(self, request, playerEmail, opponentEmail, type):
-        try:
-            p = get_object_or_404(User, email=playerEmail)
-            o = get_object_or_404(User, email=opponentEmail)
-            match = Match.objects.create(player = p, opponent = o)
-            if type == 'tr':
-                match.tournament = Tournament.objects.get(pk=int(request.data.get('trId')))
-            match.save()
-            p.games += 1
-            o.games += 1
-            p.save()
-            o.save()
-            return Response({'id': match.id}, status=status.HTTP_201_CREATED)
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+# @permission_classes([IsAuthenticated])
+# class matchId(APIView):
+#     def post(self, request, playerEmail, opponentEmail, type):
+#         try:
+#             p = get_object_or_404(User, email=playerEmail)
+#             o = get_object_or_404(User, email=opponentEmail)
+#             match = Match.objects.create(player = p, opponent = o)
+#             if type == 'tr':
+#                 match.tournament = Tournament.objects.get(pk=int(request.data.get('trId')))
+#             match.save()
+#             p.games += 1
+#             o.games += 1
+#             p.save()
+#             o.save()
+#             return Response({'id': match.id}, status=status.HTTP_201_CREATED)
+#         except Exception:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @permission_classes([IsAuthenticated])
 class userListing(APIView):
-    def get(self, *args, **kwargs):
+    def get(self, request):
         try:
             users = User.objects.all().order_by('-level')
             serializer = UserSerializer(users, many = True)
@@ -44,7 +44,7 @@ class userListing(APIView):
 class gameStats(APIView):
     def get(self, request, playerId):
         try:
-            user = User.objects.get(pk=int(playerId))
+            user = get_object_or_404(User, id=playerId)
             gameWon = Match.objects.filter(Q(player = user) | Q(opponent = user), 
                                         winner = user)
             gamePlayed = Match.objects.filter(Q(player = user) | Q(opponent = user))
@@ -65,7 +65,7 @@ class gameStats(APIView):
 class isParticipant(APIView):
     def get(self, request):
         try:
-            user = User.objects.get(pk=request.user.id)
+            user = get_object_or_404(User, id=request.user.id)
             isParticipant = user.isInTournament
             if isParticipant == True:
                 trId = Tournament.objects.filter(participant=user, finished=False).exclude(exiters=user).first().id
@@ -81,7 +81,7 @@ class isParticipant(APIView):
 class checkIsParticipant(APIView):
     def get(self, request, Id):
         try:
-            user = User.objects.get(pk=Id)
+            user = get_object_or_404(User, id=Id)
             isParticipant = user.isInTournament
             return Response({
                             'isParticipant':isParticipant,},
@@ -96,7 +96,7 @@ class registerParticipant(APIView):
     def post(self, request):
         try:
             data = request.data
-            user = User.objects.get(pk=request.user.id)
+            user = get_object_or_404(User, id=request.user.id)
             user.trAlias = data.get('alias')
             user.isInTournament = True
             user.trRound = 1
@@ -130,7 +130,7 @@ class registerParticipant(APIView):
 class isInGame(APIView):
     def get(self,request, id):
         try:
-            user = User.objects.get(pk=id)
+            user = get_object_or_404(User, id=id)
             return Response({
                             'isInGame':user.isInGame,},
                             status = status.HTTP_200_OK
@@ -142,7 +142,7 @@ class isInGame(APIView):
 class exit(APIView):
     def post(self, request):
         try:
-            user = User.objects.get(pk=request.user.id)
+            user = get_object_or_404(User, id=request.user.id)
             user.isInTournament = False
             user.save()
             tr = Tournament.objects.get(pk=request.data.get('trID'))
@@ -160,7 +160,7 @@ class exit(APIView):
 class Color(APIView):
     def get(self, request):
         try:
-            user = User.objects.get(pk=request.user.id)
+            user = get_object_or_404(User, id=request.user.id)
             return Response(
                 {"ballc": user.ballc,"paddlec":user.paddlec,
                 "tablec":user.tablec}, status=status.HTTP_200_OK)
@@ -169,7 +169,7 @@ class Color(APIView):
     
     def post(self,request):
         try:
-            user = User.objects.get(pk=request.user.id)
+            user = get_object_or_404(User, id=request.user.id)
             data = request.data
             user.ballc = data.get('ballc')
             user.paddlec = data.get('paddlec')
@@ -183,7 +183,7 @@ class Color(APIView):
 class playerStatus(APIView):
     def get(self, request, id):
         try:
-            user = User.objects.get(pk=id)
+            user = get_object_or_404(User, id=id)
             return Response({"status":user.ready}, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -192,7 +192,7 @@ class playerStatus(APIView):
 class History(APIView):
     def get(self, request, id):
         try:
-            user = User.objects.get(pk=id) 
+            user = get_object_or_404(User, id=id)
             matches = Match.objects.filter(Q(player=user) | Q(opponent=user)).order_by('-updated_at')
             data = []
             for match in matches:

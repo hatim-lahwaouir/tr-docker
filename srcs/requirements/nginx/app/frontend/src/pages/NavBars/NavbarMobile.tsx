@@ -60,7 +60,7 @@ const NavbarMobile = () => {
 						</Link>
 						</div>
 						<div className="flex flex-col items-center my-5">
-						<Link to="/game">
+						<Link to="/games">
 							<button>
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" className="h-6 w-6 fill-black dark:fill-white ">
 									<GameIcon/>

@@ -29,6 +29,7 @@ from jwt import decode as jwt_decode
 
 import UserActions.routing
 import LiveChat.routing
+import second_game.routing
 import Game.routing
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
@@ -75,7 +76,7 @@ class JWTAuthMiddleware(BaseMiddleware):
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AllowedHostsOriginValidator(
-            JWTAuthMiddleware(URLRouter(LiveChat.routing.websocket_urlpatterns+UserActions.routing.websocket_urlpatterns+Game.routing.websocket_urlpatterns))
+            JWTAuthMiddleware(URLRouter(LiveChat.routing.websocket_urlpatterns+UserActions.routing.websocket_urlpatterns+Game.routing.websocket_urlpatterns+second_game.routing.websocket_urlpatterns))
         ),
 })
 

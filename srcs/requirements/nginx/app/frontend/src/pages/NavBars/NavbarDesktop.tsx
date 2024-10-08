@@ -21,6 +21,7 @@ import NotificationsDropdown from "../../components/NotificationsDropdown";
 import { useChatContext } from "../../context/ChatContext";
 import { axiosAuth } from "../../api/axiosAuth";
 import { port, theHost } from "../../config";
+import { useGameContext } from "../../context/GameContext";
 
 interface User {
 	id: string;
@@ -53,6 +54,7 @@ const NavbarDesktop = () => {
   const [cookies] = useCookies(['userData']);
   const searchDropdownRef = useRef<HTMLDivElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
+  const { setGameSocket, gameSocket } = useGameContext();
 
 	const toggleNotifications = () => {
 		setShowNotifications(!showNotifications);
@@ -67,7 +69,6 @@ const handleLogout = async () => {
 		await axiosAuth.post('/user/logout/', {
 		refresh: localStorage.getItem('refresh'),
 	});
-  
 		performLogoutCleanup();
 	} catch (error) {
 		// console.error('Logout error:', error);
@@ -76,6 +77,10 @@ const handleLogout = async () => {
   };
   
   const performLogoutCleanup = () => {
+	if (gameSocket) {
+		setGameSocket(null);
+		gameSocket.close(); 
+	}
 	localStorage.removeItem('refresh');
 	localStorage.removeItem('access');
 	clearCookies();
@@ -306,7 +311,7 @@ const handleLogout = async () => {
 				</Link>
 				</div>
 				<div className="flex flex-col items-center my-5">
-				<Link to="/game">
+				<Link to="/games">
 					<button>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" className="h-6 w-6 fill-black dark:fill-white  hover:fill-[#808080] active:fill-[#606060]">
 							<GameIcon/>

@@ -136,7 +136,7 @@ const GamePlayerLobby: React.FC = () => {
 		<div className="min-h-screen flex flex-col  text-black dark:text-white bg-white dark:bg-black">
 			<div className=" min-h-16 "></div>
 			<div className="flex-1 flex mobile:flex-row flex-col-reverse mobile:mr-3 mobile:mb-5">
-				<div className="mobile:w-16 w-full h-16 mobile:h-full bg-yellow-300 "></div>
+				<div className="mobile:w-16 w-full h-16 mobile:h-full "></div>
 				<div className=" flex flex-col flex-1 grow mobile:ml-2 ">
 					<div className="dark:text-white mobile:m-5 maxMobile:mt-5 font-bold mobile:text-4xl text-3xl items-center text-center">PLAY WITH A FRIEND</div>
 					<div className="flex flex-col tablet:flex-row  justify-center">

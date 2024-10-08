@@ -225,7 +225,7 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }: ChatProviderPro
     }
   };
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(`wss://${wsHost}:${port}/ws/chat/?token=${userToken}`, {
+  const { sendMessage, lastMessage, readyState } = useWebSocket(`ws://${wsHost}:${port}/ws/chat/?token=${userToken}`, {
     onMessage: (event) => {
       if (typeof event.data === 'string') {
         const data = JSON.parse(event.data);

@@ -22,7 +22,8 @@ const WinnerModal: React.FC<WinnerModalProps> = ({ winner, onClose, inTournament
       setCountdown((prevCount) => {
         if (prevCount <= 1) {
           clearInterval(timerRef.current!);
-          onClose(inTournament);
+          // Use setTimeout to delay the onClose call
+          setTimeout(() => onClose(inTournament), 0);
           return 0;
         }
         return prevCount - 1;

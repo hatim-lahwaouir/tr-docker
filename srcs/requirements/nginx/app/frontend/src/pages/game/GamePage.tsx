@@ -44,6 +44,8 @@ interface GameContextType {
   setGameSetting: React.Dispatch<React.SetStateAction<GameSetting | null>>;
   winner: Winner | null;
   setWinner: React.Dispatch<React.SetStateAction<Winner | null>>;
+  showWinnerModal: boolean;
+  setShowWinnerModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface BallState {
@@ -83,6 +85,8 @@ const GamePage: React.FC = () => {
     setOpponentStatus,
     gameSetting,
     setIsOpponent,
+    showWinnerModal,
+    setShowWinnerModal,
   } = useGameContext() as GameContextType;
 
   const fixedGameWidth = 800;
@@ -91,7 +95,7 @@ const GamePage: React.FC = () => {
   const paddleHeight = 150;
   const ballSize = 30;
 
-  const [showWinnerModal, setShowWinnerModal] = useState<boolean>(false);
+  // const [showWinnerModal, setShowWinnerModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const [cookies] = useCookies(['userData']);
   
@@ -373,14 +377,14 @@ const GamePage: React.FC = () => {
                   <div className="flex justify-between items-center w-full mb-4 text-2xl text-white">
                     <div className='flex items-center gap-2'>
                       <img src={`${theHost}:${port}${player?.profile_img}`} alt="" className="rounded-full w-10"/>
-                      <div className='text-xl'>{player?.username}</div>
+                      <div className='dark:text-white text-black text-xl'>{player?.username}</div>
                     </div>
                     <div className='flex gap-4'>
                       <div className="text-blue-500">{ballState.scorePlayer}</div>
                       <div className="text-red-500">{ballState.scoreOpponent}</div>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <div className='text-xl'>{opponent?.username}</div>
+                      <div className='dark:text-white text-black text-xl'>{opponent?.username}</div>
                       <img src={`${theHost}:${port}${opponent?.profile_img}`} alt="" className="rounded-full w-10"/>
                     </div>
                   </div>

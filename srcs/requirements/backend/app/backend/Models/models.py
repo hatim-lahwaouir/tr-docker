@@ -68,6 +68,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     ballc = models.CharField(max_length=7, default="FFFFFF")
     paddlec = models.CharField(max_length=7, default="FFFFFF")
     tablec = models.CharField(max_length=7, default="000000")
+    options = (
+        ('1', '1'),
+        ('2', '2'),
+    )
+    s_game_option = models.CharField(max_length=1, default="1",choices=options)
     # we still add  game customisation of each user
 
 

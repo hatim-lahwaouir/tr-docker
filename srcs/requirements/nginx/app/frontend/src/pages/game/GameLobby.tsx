@@ -61,6 +61,8 @@ const GameLobby: React.FC = () => {
     setPlayer,
     setWinner,
     winner,
+    showWinnerModal,
+    setShowWinnerModal,
   } = useGameContext();
   const { lastMessage } = useWebSocketContext();
   
@@ -73,33 +75,12 @@ const GameLobby: React.FC = () => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timer, setTimer] = useState(30);
   const navigate = useNavigate();
-  const [showWinnerModal, setShowWinnerModal] = useState<boolean>(false);
-  
 
-  const getOpponentStatus = async () => {
-    try {
-      const response = await axiosAuth.get(`game/playerStatus/${opponent?.id}`);
-
-      if (response.data.status)
-      setOpponentStatus('ready');
-      else
-      setOpponentStatus('not ready');
-  
-    } catch (error) {
-      setOpponentStatus('not ready');
-      }
-
-  };
 
   useEffect(() => {
 		document.title = 'Game | Invite A Friend';
     
 	}, []);
-
-  useEffect(() => {
-	if (opponent)
-      getOpponentStatus();
-	}, [opponent]);
 
   useEffect(() => {
     if (lastMessage) {
@@ -284,7 +265,6 @@ const GameLobby: React.FC = () => {
 		} catch (error) {
       // console.error('Error:', error instanceof Error ? error.message : 'Unknown error');
 			}
-			finally{}
 	}
 
 	const PostGameData = async () => {
@@ -354,6 +334,8 @@ const GameLobby: React.FC = () => {
   
     if (player && opponent && timer < 2)
       checkPlayers();
+      // if (opponentStatus === 'waiting')
+      //   setOpponent(null);
   }, [playerStatus, opponentStatus, timer]);
 
 	const check = () => {
@@ -415,7 +397,7 @@ const GameLobby: React.FC = () => {
 		<div className="min-h-screen flex flex-col  text-black dark:text-white bg-white dark:bg-black">
 			<div className=" min-h-16 "></div>
 			<div className="flex-1 flex mobile:flex-row flex-col-reverse mobile:mr-3 mobile:mb-5">
-				<div className="mobile:w-16 w-full h-16 mobile:h-full   "></div>
+				<div className="mobile:w-16 w-full h-16 mobile:h-full"></div>
 				<div className=" flex flex-col flex-1 grow mobile:ml-2 ">
 					<div className="dark:text-white mobile:m-5 maxMobile:mt-5 font-bold mobile:text-4xl text-3xl items-center text-center">INVITE A FRIEND</div>
 					<div className="flex flex-col-reverse tablet:flex-row  justify-center">
@@ -498,7 +480,7 @@ const GameLobby: React.FC = () => {
           <div className='flex justify-center content-center max-h-12 maxTablet:my-2'>
             <button
                 onClick={handleReady}
-                className={`w-[180px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl ${!(player?.id === cookies.userData.id || opponent?.id === cookies.userData.id) && 'opacity-50 cursor-not-allowed'}`}
+                className={`w-[180px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl ${(!opponent || playerStatus === 'waiting' || opponentStatus === 'waiting') && 'opacity-50 cursor-not-allowed'}`}
                 disabled={!(player?.id === cookies.userData.id || opponent?.id === cookies.userData.id)}
               >
                 Ready

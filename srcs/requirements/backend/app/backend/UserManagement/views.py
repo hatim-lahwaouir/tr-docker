@@ -624,7 +624,7 @@ def reset_password(request, email):
 
     url = f"https://{settings.HOST}/resetpassword/{obj.url}"
 
-    send_mail('Rest Password ', f'This the url for reseting your password  {url}  is valid for {settings.EXPIRED_TIME} min', settings.EMAIL_HOST_USER , [email])
+    send_mail('Rest Password ', f'This the url for reseting your password    {url}    is valid for {settings.EXPIRED_TIME} min', settings.EMAIL_HOST_USER , [email])
     return Response({'message': 'We sent you an email to reset your password !'})
 
 

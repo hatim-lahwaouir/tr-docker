@@ -17,6 +17,10 @@ interface ProfileContextType {
   setByMe: React.Dispatch<React.SetStateAction<boolean>>;
   setFriendState: React.Dispatch<React.SetStateAction<'me' | 'friends' | 'pending' | 'notFriends' | 'blocked'>>;
   setTheId: React.Dispatch<React.SetStateAction<string>>;
+  dataHistory: HistoryGame[];
+  setDataHistory:React.Dispatch<React.SetStateAction<HistoryGame[]>>;
+  setDataGame:React.Dispatch<React.SetStateAction<DataGame>>;
+  dataGame:DataGame;
 }
 
 interface Friend {
@@ -27,6 +31,24 @@ interface Friend {
   level: number;
   status: string;
 }
+
+interface HistoryGame {
+  date: string;
+  opponentName: string;
+  opponentId:number;
+  opponentPicture: string;
+  score: string;
+  state: "WIN" | "LOSE" | "DRAW";
+  time: string;
+  type: 'ping_pong' | 'RPS'
+}
+
+interface DataGame {
+  game: number;
+  win: number;
+  lose: number;
+  }
+
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
@@ -48,7 +70,58 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [theUser, setTheUser] = useState<Friend | null>(null);
   const [byMe, setByMe] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+	const [dataHistory, setDataHistory] = useState<HistoryGame[]>([]);
+	const [dataGame, setDataGame] = useState<DataGame>({game:0, win:0, lose:0});
   const navigate = useNavigate();
+
+
+
+  const pingPongFetchHistory = async (): Promise<HistoryGame[]> => {
+    
+		try {
+		  const response = await axiosAuth.get(`/game/history/${theId}`);
+		  const result: Omit<HistoryGame, 'type'>[] = response.data;
+		  return result.map(game => ({ ...game, type: 'ping_pong' }));
+		} catch (error) {
+		  console.error('Error fetching ping pong history:', error instanceof Error ? error.message : 'Unknown error');
+		  return [];
+		}
+	  };
+	
+	  const rpsFetchHistory = async (): Promise<HistoryGame[]> => {
+		try {
+		  const response = await axiosAuth.get(`/sgame/history/${theId}`);
+      setDataGame(response.data.game_info);
+      console.log(response.data);
+      
+		  const result: Omit<HistoryGame, 'type'>[] = response.data.infos;
+		  return result.map(game => ({ ...game, type: 'RPS' }));
+		} catch (error) {
+		  console.error('Error fetching RPS history:', error instanceof Error ? error.message : 'Unknown error');
+		  return [];
+		}
+	  };
+	
+	  const fetchAllHistory = async () => {
+      if (!theId) return;
+      try {
+		  const [pingPongHistory, rpsHistory] = await Promise.all([
+			pingPongFetchHistory(),
+			rpsFetchHistory()
+		  ]);
+	    setDataHistory([]);
+		  setDataHistory(prevData => {
+			const combinedData = [...prevData, ...pingPongHistory, ...rpsHistory];
+			return combinedData.sort((a, b) => {
+			  const dateTimeA = new Date(`${a.date} ${a.time}`);
+			  const dateTimeB = new Date(`${b.date} ${b.time}`);
+			  return dateTimeB.getTime() - dateTimeA.getTime(); // Sort in descending order (most recent first)
+			});
+		  });
+		} catch (error) {
+		  console.error('Error fetching history:', error instanceof Error ? error.message : 'Unknown error');
+		}
+	  };
 
   const fetchUserInfo = async () => {
     if (!theId) return;
@@ -69,7 +142,6 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         'notFriends'
       );
       setByMe(userInfo.by_me);
-      setTheId(userInfo.user_data.id);
       setTheUser(userInfo.user_data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -117,7 +189,8 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   }, [globalContext.lastMessage]);
 
   useEffect(() => {
-    fetchUserInfo();
+      fetchUserInfo();
+      fetchAllHistory();
   }, [theId]);
 
   const contextValue: ProfileContextType = {
@@ -132,6 +205,10 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setTheId,
     theUser,
     loading,
+    dataHistory,
+    setDataHistory,
+    setDataGame,
+    dataGame
   };
 
   return (

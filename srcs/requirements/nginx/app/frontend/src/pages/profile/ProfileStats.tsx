@@ -156,7 +156,7 @@ const ProfileStats = () =>{
 
 	return(
 		<>
-			<div className=' flex grow'>
+			<div className=' flex grow pb-3'>
 				<div className='flex flex-col gap-2 w-full'>
 					<div className='flex flex-col  gap-2'>
 						<div className='flex flex-col  grow'>
@@ -197,25 +197,25 @@ const ProfileStats = () =>{
 						<div className='flex gap-2 items-center   '>
 							<div className='flex-1 flex justify-around gap-1'>
 								<div className=' flex justify-center flex-col items-center'>
-									<div className='text-center  font-bold '>{DATA.game}</div>
+									<div className='text-center  font-bold '>{DATA.game + profileInfo.dataGame.game}</div>
 									<div className='text-center  text-sm font-bold '>GAME</div>
 								</div>
 								<div className=' flex justify-center flex-col items-center'>
-									<div className='text-center  font-bold '>{DATA.win}</div>
+									<div className='text-center  font-bold '>{DATA.win + profileInfo.dataGame.win}</div>
 									<div className='text-center text-sm font-bold '>WIN</div>
 								</div>
 								<div className=' flex justify-center flex-col items-center'>
-									<div className='text-center  font-bold '>{DATA.game - DATA.win}</div>
+									<div className='text-center  font-bold '>{(DATA.game - DATA.win) + profileInfo.dataGame.lose}</div>
 									<div className='text-center text-sm font-bold '>LOSE</div>
 								</div>
                           
 								<div className="relative size-28 flex">
 									<svg className="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
 										<circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-neutral-700" strokeWidth="3"></circle>
-										<circle cx="18" cy="18" r="16" fill="none" className="stroke-current " strokeWidth="3" strokeDasharray="100" strokeDashoffset={`${ DATA.game ? 100 - ((DATA.win * 100) / DATA.game) : 100 }`} strokeLinecap="round"></circle>
+										<circle cx="18" cy="18" r="16" fill="none" className="stroke-current " strokeWidth="3" strokeDasharray="100" strokeDashoffset={`${ (DATA.game + profileInfo.dataGame.game)  ? 100 - (((DATA.win + profileInfo.dataGame.win) * 100) / (DATA.game + profileInfo.dataGame.game) ) : 100 }`} strokeLinecap="round"></circle>
 									</svg>
 									<div className="absolute top-1/2 start-1/2 transform flex flex-col -translate-y-1/2 -translate-x-1/2">
-										<span className="text-center  font-bold ">{DATA.game ? ((DATA.win * 100) / DATA.game).toFixed(0) : 0}%</span>
+										<span className="text-center  font-bold ">{(DATA.game + profileInfo.dataGame.game) ? (((DATA.win + profileInfo.dataGame.win) * 100) / (DATA.game + profileInfo.dataGame.game)).toFixed(0) : 0}%</span>
 										<span className="text-center text-[11px] font-bold ">WIN RATE</span>
 									</div>
 								</div>
@@ -234,7 +234,7 @@ const ProfileStats = () =>{
                                  <BsThreeDots className="text-xl" />
                                </button>
                                {isOptionsOpen && (
-                                 <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-[#191919] ring-1 ring-black ring-opacity-5`}>
+                                 <div className={`absolute mobile:right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-[#191919] ring-1 ring-black ring-opacity-5`}>
                                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                                      { profileInfo.friendState === 'blocked' && profileInfo.byMe 
                                      ? ['Unblock'].map((option) => (
