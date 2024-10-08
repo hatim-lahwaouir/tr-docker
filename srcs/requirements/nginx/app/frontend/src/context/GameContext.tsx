@@ -139,7 +139,7 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
                 setGameId(data.gameId.toString());
 
                 // Connect to the game-specific WebSocket
-                const socket = new WebSocket(`wss://${wsHost}:${port}/ws/game/${data.gameId}/?token=${userToken}`);
+                const socket = new WebSocket(`ws://${wsHost}:${port}/ws/game/${data.gameId}/?token=${userToken}`);
                 
                 socket.onopen = () => {
                   setGameSocket(socket);

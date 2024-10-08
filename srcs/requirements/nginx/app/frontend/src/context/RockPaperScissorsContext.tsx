@@ -34,7 +34,7 @@
 // //   }, [gameSocket]);
 
 //     // Connect to the game WebSocket once the gameId is set
-//     const WS_URL_GAME = gameId ? `wss://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
+//     const WS_URL_GAME = gameId ? `ws://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
 
 //     // Set the game WebSocket in context when the game connection is established
 //     useEffect(() => {
@@ -81,7 +81,7 @@
 //   const userToken = localStorage.getItem('access');
 
 //   // Game WebSocket connection URL (set when gameId is available)
-//   const WS_URL_GAME = gameId ? `wss://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
+//   const WS_URL_GAME = gameId ? `ws://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
 
 //   // WebSocket connection for the game, conditional on gameId being set
 //   const {
@@ -155,7 +155,7 @@ export const RockPaperScissorsProvider: React.FC<RockPaperScissorsProviderProps>
   const userToken = localStorage.getItem('access');
 
   // Game WebSocket connection URL (set when gameId is available)
-  const WS_URL_GAME = gameId ? `wss://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
+  const WS_URL_GAME = gameId ? `ws://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
 
   // WebSocket connection for the game, conditional on gameId being set
   const {

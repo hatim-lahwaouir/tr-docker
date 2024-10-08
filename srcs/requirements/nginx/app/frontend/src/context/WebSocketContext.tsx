@@ -67,7 +67,7 @@ const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
   const [onlineFriends, setOnlineFriends] = useState<Friend[]>([]);
   const [updateFriendList, setUpdateFriendList] = useState<boolean>(false);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(`wss://${wsHost}:${port}/ws/user/?token=${userToken}`);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(`ws://${wsHost}:${port}/ws/user/?token=${userToken}`);
 
 
   const addEventListener = useCallback((status: string, listener: (event: MessageEvent) => void) => {

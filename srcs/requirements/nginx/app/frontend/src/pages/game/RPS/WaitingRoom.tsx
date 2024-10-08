@@ -46,7 +46,7 @@ const WaitingRoom: React.FC = () => {
     // const [wsReady, setWsReady] = useState(false);
 
     // Connect to the game queue WebSocket
-    const WS_URL_QUEUE = `wss://${wsHost}:${port}/ws/sGameQ/?token=${userToken}`;
+    const WS_URL_QUEUE = `ws://${wsHost}:${port}/ws/sGameQ/?token=${userToken}`;
     const { 
         lastMessage: lastQueueMessage, 
         getWebSocket: getQueueWebSocket,
