@@ -138,18 +138,12 @@ const GameHome = () => {
 							backgroundRepeat: 'no-repeat'
 							}}
 						>
-						<div className='text-2xl font-bold text-black'>
-							Ping Pong <br /> Play With Friends
+						<div className='text-2xl flex font-bold text-black relative'>
+							<div className='text-white text-4xl h-full blur-xl opacity-100'>Ping Pong <br /> Play With Friends</div>
+							<div className='flex-1 absolute'>Ping Pong <br /> Play With Friends</div>
+							
 						</div>
 							
-						<div className='text-2xl font-medium flex gap-1'>
-							<div>
-								<svg width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#bababa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-up-right"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></g></svg>
-							</div>
-							<div className='text-[#bababa]'>
-								Play
-							</div>
-						</div>
 						</div>
 						<div className={`flex-1 mobile:min-h-[350px] min-h-[250px] rounded-lg shadow-2xl flex flex-col justify-between p-8 cursor-pointer
 							${ barInfo.isDark ? 'bg-gradient-to-br from-[#4B4B4B] via-black to-[#4B4B4B]' : 'bg-gradient-to-br from-[#B7B7B7] via-white to-[#B7B7B7]'}`}
@@ -161,17 +155,9 @@ const GameHome = () => {
 								backgroundRepeat: 'no-repeat'
 								}}
 								>
-							<div className='text-2xl font-bold text-black'>
-								Ping Pong <br /> Play Tounament Locally
-							</div>
-
-							<div className='text-2xl font-medium flex gap-1'>
-								<div>
-									<svg width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#bababa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-up-right"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></g></svg>
-								</div>
-								<div className='text-[#bababa]'>
-									Play
-								</div>
+							<div className='text-2xl flex font-bold text-black relative'>
+								<div className='text-white text-4xl h-full blur-xl opacity-100'>Ping Pong <br /> Play Tounament Locally</div>
+								<div className='flex-1 absolute'>Ping Pong <br /> Play Tounament Locally</div>
 							</div>
 						</div>
 						</div>
@@ -190,17 +176,10 @@ const GameHome = () => {
 							backgroundRepeat: 'no-repeat'
 							}}
 						>
-							<div className='text-2xl font-bold text-black'>
-							Ping Pong <br /> Play Tournament
-							</div>
 
-							<div className='text-2xl font-medium flex gap-1'>
-								<div>
-									<svg width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#bababa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-up-right"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></g></svg>
-								</div>
-								<div className='text-[#bababa]'>
-									Play
-								</div>
+							<div className='text-2xl flex font-bold text-black relative'>
+								<div className='text-white text-4xl h-full blur-xl opacity-100'>Ping Pong <br /> Play Tournament</div>
+								<div className='flex-1 absolute'>Ping Pong <br /> Play Tournament</div>
 							</div>
 						</div>
 						<div className={`flex-1 mobile:min-h-[350px] min-h-[250px] rounded-lg shadow-2xl flex flex-col justify-between p-8 cursor-pointer
@@ -213,17 +192,9 @@ const GameHome = () => {
 								backgroundRepeat: 'no-repeat'
 								}}
 								>
-							<div className='text-2xl font-bold text-black'>
-								Ping Pong <br /> Play Locally
-							</div>
-
-							<div className='text-2xl font-medium flex gap-1'>
-								<div>
-									<svg width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#bababa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-up-right"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></g></svg>
-								</div>
-								<div className='text-[#bababa]'>
-									Play
-								</div>
+							<div className='text-2xl flex font-bold text-black relative'>
+								<div className='text-white text-4xl h-full blur-xl opacity-100'>Ping Pong <br /> Play Locally</div>
+								<div className='flex-1 absolute'>Ping Pong <br /> Play Locally</div>
 							</div>
 						</div>
 						{/* <div className={`flex-1 mobile:min-h-[350px] min-h-[250px] rounded-lg shadow-2xl flex flex-col justify-between p-8 cursor-pointer
