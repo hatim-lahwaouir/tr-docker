@@ -108,11 +108,9 @@ const Game: React.FC = () => {
   useEffect(() => {
     if (lastGameMessage) {
       const data = JSON.parse(lastGameMessage.data);
-      console.log('game socket ->', data);
       
       switch (data.type) {
         case 'start.game':
-          console.log('the start game data->>>', data);
           if (data.p1_data.id === cookies.userData.id) {
             setPlayer(data.p1_data);
             setOpponent(data.p2_data);
@@ -136,6 +134,9 @@ const Game: React.FC = () => {
               setChoice(data.loser_choice)
               setChoiceO(data.winner_choice)
               newScore.opponent += 1;
+            } else if (data.status === 'draw') {
+              setChoice(data.draw_choice)
+              setChoiceO(data.draw_choice)
             }
             return newScore;
           });
@@ -150,10 +151,14 @@ const Game: React.FC = () => {
           break;
         case 'game.result':
           if (data.status === 'win' || data.status === 'lose')
+            setTimeout(() => {
             setWinner(data.winner);
+          }, 2000);
           else if (data.status === 'draw') {
             setIsDraw(true);
+            setTimeout(() => {
             setWinner(data.winner);
+          }, 2000);
           }
           break;
         case 'invalid.game':

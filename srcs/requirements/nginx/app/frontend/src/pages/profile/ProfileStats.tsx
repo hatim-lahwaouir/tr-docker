@@ -8,6 +8,7 @@ import { useChatContext } from "../../context/ChatContext";
 import { useNavbarContext } from "../../context/NavbarContext";
 import { axiosAuth } from "../../api/axiosAuth";
 import { AxiosError } from "axios";
+import { useCookies } from "react-cookie";
 
 interface UserState {
 	fract_level: number,
@@ -39,6 +40,7 @@ const ProfileStats = () =>{
 		const optionsRef = useRef<HTMLDivElement>(null);
 		const chatContext = useChatContext();
 		const barInfos = useNavbarContext();
+		const [cookies] = useCookies(['userData']);
 
 		const fetchingUserData = async () => {
 			setIsLoading(true);
@@ -75,17 +77,29 @@ const ProfileStats = () =>{
 	}, []);
 	
 	const handleAddFriend = (id: string) => {
+		if (id === cookies.userData.id) {
+			profileInfo.setFriendState('me');
+			return;
+		}
 		addFriend(id);
 		profileInfo.setByMe(true);
 		profileInfo.setFriendState('pending');
 	};
-
+	
 	const handleUnfriend = (id: string) => {
+		if (id === cookies.userData.id) {
+			profileInfo.setFriendState('me');
+			return;
+		}
 		unfriend(id);
 		profileInfo.setFriendState('notFriends');
 	};
-
+	
 	const handleCancelRequest = (id: string) => {
+		if (id === cookies.userData.id) {
+			profileInfo.setFriendState('me');
+			return;
+		}
 		cancelFriendRequest(id);
 		profileInfo.setFriendState('notFriends');
 	};

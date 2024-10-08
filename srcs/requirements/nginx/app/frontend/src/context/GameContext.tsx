@@ -118,8 +118,6 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       const data = JSON.parse(lastMessage.data);
 
       if (data.type === 'game.invite') {
-		
-        console.log('game.invite', data);
         switch (data.status) {
           case 'send':
             if (data.receiver.username === cookies.userData.username) {
@@ -131,7 +129,6 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             case 'accept':
               setShowWinnerModal(false);
               if (data.receiver.id === player?.id || data.sender.id === cookies.userData.id) {
-                console.log('accept data', data);
                 
                 //!here accept
                 setOpponent(data.receiver);
@@ -142,7 +139,7 @@ const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
                 setGameId(data.gameId.toString());
 
                 // Connect to the game-specific WebSocket
-                const socket = new WebSocket(`ws://${wsHost}:${port}/ws/game/${data.gameId}/?token=${userToken}`);
+                const socket = new WebSocket(`wss://${wsHost}:${port}/ws/game/${data.gameId}/?token=${userToken}`);
                 
                 socket.onopen = () => {
                   setGameSocket(socket);

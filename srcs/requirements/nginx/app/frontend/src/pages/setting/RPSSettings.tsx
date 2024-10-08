@@ -25,10 +25,9 @@ function RPSSettings() {
         try {
             const response = await axiosAuth.get(`sgame/get-option/`);
             const result = response.data;
-            console.log('Fetched option:', result.game_option);
             setSelectedOption(result.game_option);
         } catch (error) {
-            console.error('Error getting game option:', error);
+            // console.error('Error getting game option:', error);
         }
     }, []);
 
@@ -37,15 +36,13 @@ function RPSSettings() {
     }, [getOption]);
 
     const handleOptionChange = async (option: number) => {
-        console.log('Changing option to:', option);
         setSelectedOption(option);
         try {
             await axiosAuth.post('sgame/set-option/', {
                 option: option,
             });
-            console.log('Option set successfully:', option);
         } catch (error) {
-            console.error('Error posting game data:', error);
+            // console.error('Error posting game data:', error);
         }
     };
 

@@ -45,7 +45,7 @@ const fetchFriends = async (id: string) => {
 
       setFriends(friendsInfo);
     } else {
-      console.error('Unexpected response format:', response.data);
+      // console.error('Unexpected response format:', response.data);
     }
   } catch (error) {
     // console.error('Error fetching friends list:', error);

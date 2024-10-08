@@ -47,7 +47,6 @@ type WeekData = {
   interface CustomTooltipProps extends TooltipProps<number, string> {}
 
   const CustomTooltip: React.FC<CustomTooltipProps>  = ({ active, payload, label }) => {
-	console.log(payload);
 	
 	if (active && payload && payload.length) {
 		return (

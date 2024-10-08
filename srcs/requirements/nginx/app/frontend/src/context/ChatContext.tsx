@@ -225,7 +225,7 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }: ChatProviderPro
     }
   };
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(`ws://${wsHost}:${port}/ws/chat/?token=${userToken}`, {
+  const { sendMessage, lastMessage, readyState } = useWebSocket(`wss://${wsHost}:${port}/ws/chat/?token=${userToken}`, {
     onMessage: (event) => {
       if (typeof event.data === 'string') {
         const data = JSON.parse(event.data);
@@ -294,7 +294,7 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }: ChatProviderPro
               autoClose: 3000,
               hideProgressBar: true,
               closeOnClick: false,
-              pauseOnHover: true,
+              pauseOnHover: false,
               draggable: true,
               className: "flex bg-white dark:bg-[#191919] text-[#191919] dark:text-white shadow-lg rounded-lg",
             }
@@ -313,7 +313,7 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }: ChatProviderPro
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
         });
       }

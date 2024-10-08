@@ -21,6 +21,7 @@ import PaperIcon2 from '../../../assets/paper.png';
 import RockIcon3 from '../../../assets/rock2.png';
 import ScissorsIcon3 from '../../../assets/scissors2.png';
 import PaperIcon3 from '../../../assets/paper2.png';
+import { toast } from 'react-toastify';
 
 
 
@@ -45,7 +46,7 @@ const WaitingRoom: React.FC = () => {
     // const [wsReady, setWsReady] = useState(false);
 
     // Connect to the game queue WebSocket
-    const WS_URL_QUEUE = `ws://${wsHost}:${port}/ws/sGameQ/?token=${userToken}`;
+    const WS_URL_QUEUE = `wss://${wsHost}:${port}/ws/sGameQ/?token=${userToken}`;
     const { 
         lastMessage: lastQueueMessage, 
         getWebSocket: getQueueWebSocket,
@@ -59,7 +60,12 @@ const WaitingRoom: React.FC = () => {
             // console.error('WebSocket error:', event);
             // setWsReady(false);
         },
-        onClose: () => {
+        onClose: (event) => {
+            // console.log(event.code === 1006);
+            if (event.code === 1006) {   
+                toast.warn("You are already in the queue.");
+                navigate('/games');
+            }
             // console.log('WebSocket disconnected');
             // setWsReady(false);
         },
@@ -73,7 +79,7 @@ const WaitingRoom: React.FC = () => {
             if (socket) {
                 setGameQueueSocket(socket as WebSocket);
             } else {
-                console.error('getQueueWebSocket did not return a valid WebSocket object');
+                // console.error('getQueueWebSocket did not return a valid WebSocket object');
             }
         }
     }, [readyState, getQueueWebSocket, setGameQueueSocket]);
@@ -89,7 +95,7 @@ const WaitingRoom: React.FC = () => {
                     setTimerStarted(true);
                 }
             } catch (error) {
-                console.error("Error parsing WebSocket message:", error);
+                // console.error("Error parsing WebSocket message:", error);
             }
         }
     }, [lastQueueMessage, setGameId]);
@@ -106,10 +112,9 @@ const WaitingRoom: React.FC = () => {
         try {
             const response = await axiosAuth.get(`sgame/get-option/`);
             const result = response.data;
-            console.log('Fetched option:', result.game_option);
             setSelectedOption(result.game_option);
         } catch (error) {
-            console.error('Error getting game option:', error);
+            // console.error('Error getting game option:', error);
         }
     }, []);
 
@@ -118,22 +123,15 @@ const WaitingRoom: React.FC = () => {
     }, [getOption]);
 
     const handleOptionChange = async (option: number) => {
-        console.log('Changing option to:', option);
         setSelectedOption(option);
         try {
             await axiosAuth.post('sgame/set-option/', {
                 option: option,
             });
-            console.log('Option set successfully:', option);
         } catch (error) {
-            console.error('Error posting game data:', error);
+            // console.error('Error posting game data:', error);
         }
     };
-
-    // Debugging useEffect
-    useEffect(() => {
-        console.log('Current selectedOption:', selectedOption);
-    }, [selectedOption]);
 
     return (
         <>

@@ -269,7 +269,7 @@ const TounamentContextProvider: React.FC<TounamentContextProviderProps> = ({ chi
                 
                 gameContext.setGameId(match.matchId);
   
-                const socket = new WebSocket(`ws://${wsHost}:${port}/ws/game/${match.matchId}/?token=${userToken}`);
+                const socket = new WebSocket(`wss://${wsHost}:${port}/ws/game/${match.matchId}/?token=${userToken}`);
   
                 socket.onopen = () => {
                   gameContext.setGameSocket(socket);

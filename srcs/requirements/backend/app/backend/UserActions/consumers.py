@@ -60,7 +60,7 @@ class UserManagement(WebsocketConsumer):
         receiver = self.get_user(text_data_json.get('receiver'))
         self.user.refresh_from_db()
 
-        if receiver is None or receiver.id == self.user.id:
+        if receiver is None and receiver.id == self.user.id:
             return 
 
 
@@ -403,9 +403,9 @@ class UserManagement(WebsocketConsumer):
                 )
 
     def creat_game(self, receiver):
-        match = Match.objects.create(player = self.user, opponent = receiver)
-        if type == 'tr':
-            match.tournament = Tournament.objects.get(pk=int(request.data.get('trId')))
+        match = Match.objects.create(player = receiver, opponent = self.user)
+        # if type == 'tr':
+        #     match.tournament = Tournament.objects.get(pk=int(request.data.get('trId')))
         match.save()
         self.user.games += 1
         receiver.games += 1

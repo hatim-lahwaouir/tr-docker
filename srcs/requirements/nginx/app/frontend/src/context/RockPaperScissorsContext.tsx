@@ -34,7 +34,7 @@
 // //   }, [gameSocket]);
 
 //     // Connect to the game WebSocket once the gameId is set
-//     const WS_URL_GAME = gameId ? `ws://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
+//     const WS_URL_GAME = gameId ? `wss://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
 
 //     // Set the game WebSocket in context when the game connection is established
 //     useEffect(() => {
@@ -81,7 +81,7 @@
 //   const userToken = localStorage.getItem('access');
 
 //   // Game WebSocket connection URL (set when gameId is available)
-//   const WS_URL_GAME = gameId ? `ws://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
+//   const WS_URL_GAME = gameId ? `wss://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
 
 //   // WebSocket connection for the game, conditional on gameId being set
 //   const {
@@ -116,7 +116,7 @@
 //   );
 // };
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { port, wsHost } from '../config';
 
@@ -155,7 +155,7 @@ export const RockPaperScissorsProvider: React.FC<RockPaperScissorsProviderProps>
   const userToken = localStorage.getItem('access');
 
   // Game WebSocket connection URL (set when gameId is available)
-  const WS_URL_GAME = gameId ? `ws://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
+  const WS_URL_GAME = gameId ? `wss://${wsHost}:${port}/ws/sGame/${gameId}/?token=${userToken}` : null;
 
   // WebSocket connection for the game, conditional on gameId being set
   const {
@@ -163,12 +163,6 @@ export const RockPaperScissorsProvider: React.FC<RockPaperScissorsProviderProps>
     lastMessage: lastGameMessage,
     readyState: gameReadyState,
   } = useWebSocket(WS_URL_GAME, { shouldReconnect: () => true }, Boolean(gameId));
-
-  useEffect(() => {
-    if (gameReadyState === ReadyState.OPEN) {
-      console.log('Game WebSocket connection is open');
-    }
-  }, [gameReadyState]);
 
   const value: RockPaperScissorsContextType = {
     gameId,

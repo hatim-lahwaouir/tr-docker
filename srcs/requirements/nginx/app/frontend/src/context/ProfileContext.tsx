@@ -4,6 +4,7 @@ import { axiosAuth } from '../api/axiosAuth';
 import { port, theHost } from '../config';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
+import { useCookies } from 'react-cookie';
 
 interface ProfileContextType {
   username: string;
@@ -73,7 +74,7 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 	const [dataHistory, setDataHistory] = useState<HistoryGame[]>([]);
 	const [dataGame, setDataGame] = useState<DataGame>({game:0, win:0, lose:0});
   const navigate = useNavigate();
-
+  const [cookies] = useCookies(['userData']);
 
 
   const pingPongFetchHistory = async (): Promise<HistoryGame[]> => {
@@ -83,7 +84,7 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 		  const result: Omit<HistoryGame, 'type'>[] = response.data;
 		  return result.map(game => ({ ...game, type: 'ping_pong' }));
 		} catch (error) {
-		  console.error('Error fetching ping pong history:', error instanceof Error ? error.message : 'Unknown error');
+		  // console.error('Error fetching ping pong history:', error instanceof Error ? error.message : 'Unknown error');
 		  return [];
 		}
 	  };
@@ -92,12 +93,11 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 		try {
 		  const response = await axiosAuth.get(`/sgame/history/${theId}`);
       setDataGame(response.data.game_info);
-      console.log(response.data);
       
 		  const result: Omit<HistoryGame, 'type'>[] = response.data.infos;
 		  return result.map(game => ({ ...game, type: 'RPS' }));
 		} catch (error) {
-		  console.error('Error fetching RPS history:', error instanceof Error ? error.message : 'Unknown error');
+		  // console.error('Error fetching RPS history:', error instanceof Error ? error.message : 'Unknown error');
 		  return [];
 		}
 	  };
@@ -119,7 +119,7 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 			});
 		  });
 		} catch (error) {
-		  console.error('Error fetching history:', error instanceof Error ? error.message : 'Unknown error');
+		  // console.error('Error fetching history:', error instanceof Error ? error.message : 'Unknown error');
 		}
 	  };
 
@@ -163,14 +163,14 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       const data = JSON.parse(globalContext.lastMessage.data);
 
       if (data.type === 'relation.agreement') {
-        if (data.relation_status === 'Anonymous') {
+        if (data.relation_status === 'Anonymous' && friendState !== 'me') {
           setFriendState('notFriends');
         }
-        else if (data.relation_status === 'friends') {
+        else if (data.relation_status === 'friends' && friendState !== 'me') {
           setFriendState('friends');
         }
       }
-      else if (data.type === 'relation.status') {
+      else if (data.type === 'relation.status' && friendState !== 'me') {
         if (data.rel_status === 'unblock') {
           setFriendState('notFriends');
         }
@@ -178,10 +178,10 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
           setFriendState('blocked');
         }
       }
-      else if (data.type === 'add.friend') {
+      else if (data.type === 'add.friend' && friendState !== 'me') {
         setFriendState('pending');
       }
-      else if (data.type === 'cancel.invite') {
+      else if (data.type === 'cancel.invite' && friendState !== 'me') {
         setFriendState('notFriends');
       }
 

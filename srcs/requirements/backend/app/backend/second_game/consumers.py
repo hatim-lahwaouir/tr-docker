@@ -5,17 +5,27 @@ from .models import SGame, Round
 from .serializers import UserSearch
 import threading
 import json
+from django.db.models import Q
 
 user_ids = set()
 
 class GameQueue(WebsocketConsumer):
     def connect(self):
-
         self.user = self.scope['user']
         if not self.user.is_authenticated:
             return
+       
+       
         self.gp_n = str(self.user.id)+ '_s_game_q'
         async_to_sync(self.channel_layer.group_add)(self.gp_n, self.channel_name)
+
+       
+        
+        print(user_ids)
+        if SGame.objects.filter(Q(p1=self.user) | Q(p2=self.user) , finished=False).exists() or self.user in user_ids:
+            self.close()
+            return
+
 
 
 
@@ -26,7 +36,6 @@ class GameQueue(WebsocketConsumer):
             p2 = user_ids.pop()
             while len(user_ids) > 0 and p2.id != p1.id:
                 p2 = user_ids.pop()
-
             gameID = SGame.objects.create(p1=p1, p2=p2)
             self.sendGameId(p1, p2, gameID.id)
 
@@ -35,14 +44,21 @@ class GameQueue(WebsocketConsumer):
 
 
 
-
-    def disconnect(self, close_code):
-        try:
-            user_ids.remove(self.user)
-        except :
-            pass
+    def disconnect(self):
         if not self.user.is_authenticated:
             return
+        async_to_sync(self.channel_layer.group_discard)(
+            self.gp_n, self.channel_name
+        )
+
+    def disconnect(self, close_code):
+        if not self.user.is_authenticated:
+            return
+        if close_code != 1006:
+            try:
+                user_ids.remove(self.user)
+            except :
+                pass
         async_to_sync(self.channel_layer.group_discard)(
             self.gp_n, self.channel_name
         )
@@ -201,13 +217,12 @@ class Game(WebsocketConsumer):
         game = SGame.objects.filter(pk=self.gameId).first()
 
         if game is None:
-            self.disconnect(500)
+            self.disconnect(1000)
             return 
 
 
         if game.finished:
-            self.close()
-            user_ids.remove(self.user)
+            self.disconnect(1000)
             return
     
         rounds = game.rounds.count()
