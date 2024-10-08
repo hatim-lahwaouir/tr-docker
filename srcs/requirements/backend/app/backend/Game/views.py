@@ -149,9 +149,8 @@ class exit(APIView):
             
             if tr.finished == False:
                 tr.exiters.add(user)
-                print("*     [trNOTFinished]    *")
             else:
-                print("*     [trFinished]   *")
+                pass
             return Response(status = status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)

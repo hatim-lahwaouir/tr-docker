@@ -51,8 +51,6 @@ INSTALLED_APPS = [
     'Models',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    #to run a script
-    'django_extensions',
     'second_game',
  ]
 

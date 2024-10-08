@@ -43,7 +43,6 @@ class consumer(AsyncWebsocketConsumer):
     
     async def disconnect(self, close_code):
         self.user.isIntournament = False
-        print(f"isIntournament set to finished for {self.user.username}")
         await self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
         )
@@ -59,7 +58,6 @@ class consumer(AsyncWebsocketConsumer):
             serializer = RoundSerializer(r)
             return serializer.data
         except Exception as e:
-            print(f"roundserializer exception:=>>>>> :{e}")
             return None
     
     @database_sync_to_async
@@ -79,7 +77,6 @@ class consumer(AsyncWebsocketConsumer):
         matches_data = []
         for round in rounds:
             matches = round.matches.filter(finished=False)
-            print(matches)
             for match in matches:
                 player = async_to_sync(self.getUser)(match, 'player')
                 player_data = async_to_sync(self.serializeUser)(player)
@@ -103,7 +100,7 @@ class consumer(AsyncWebsocketConsumer):
             participants_data3 = await self.serialize_participants(3)
             if participants_data3:
                 await self.setFinished()
-                print('-----------[     FINAL ROUND   ]------------')
+
             
             await self.channel_layer.group_send(
                 self.room_group_name, {
@@ -137,10 +134,10 @@ class consumer(AsyncWebsocketConsumer):
             user.save()
         self.tr.save()
         # self.user.save()
-        print(f"[is in tournament tr finished are set for {self.user.username} ]")
+
     async def send_data(self, event):
         event.pop('type')
         try:
             await self.send(json.dumps(event))
         except Exception as e:
-            print(e)
+            pass

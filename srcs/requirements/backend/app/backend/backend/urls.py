@@ -25,8 +25,6 @@ urlpatterns = [
     path('api/game/', include('Game.urls')),
     path('api/user-game-stats/', include('UserGameStats.urls')),
     path('api/user/', include('UserManagement.urls')),
-    path('', include('django_prometheus.urls')),
-
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

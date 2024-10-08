@@ -544,7 +544,7 @@ def upload_image(request):
         return Response({f'message' : 'invalid img size'}, status=status.HTTP_400_BAD_REQUEST)
     img_mime_type = imghdr.what(img)
     valid_image_formats = ['jpg', 'png']
-    print(img_mime_type)
+
 
     if img_mime_type not in valid_image_formats:
         return Response({'message': 'Invalid image format. Only JPG are allowed.'}, status=status.HTTP_400_BAD_REQUEST)

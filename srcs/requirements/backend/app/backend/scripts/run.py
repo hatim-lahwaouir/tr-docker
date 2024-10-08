@@ -27,7 +27,6 @@ def create_user():
     User.objects.all().update(online=False)
 
 
-    print("Users created!!")
 
 def run():
     create_user()

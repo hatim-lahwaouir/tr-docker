@@ -60,7 +60,7 @@ class UserManagement(WebsocketConsumer):
         receiver = self.get_user(text_data_json.get('receiver'))
         self.user.refresh_from_db()
 
-        if receiver is None:
+        if receiver is None or receiver.id == self.user.id:
             return 
 
 

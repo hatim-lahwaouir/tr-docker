@@ -10,7 +10,6 @@ import os
 
 def upload_to(instance, filename):
     try:
-        print('{user_id}.jpg'.format(user_id=instance.id))
         os.remove('media/{user_id}.jpg'.format(user_id=instance.id))    
     except:
         pass

@@ -34,8 +34,7 @@ def gameInfo(request, id):
 
     n_win = SGame.objects.filter(winner=user).count()
     
-    for  n in SGame.objects.filter(winner=None):
-        print(n.winner)
+
     n_lose = SGame.objects.filter(
     (Q(p1=user) & ~Q(winner=user)) |  # The user is p1, but not the winner
     (Q(p2=user) & ~Q(winner=user))    # The user is p2, but not the winner
@@ -54,7 +53,6 @@ def gameInfo(request, id):
 def set_game_ui(request):
     num = request.data.get('option')
     
-    print(num)
     if num not in (1, 2, 3):
         return Response({'detail': 'Bad option'}, status=status.HTTP_400_BAD_REQUEST)
 
