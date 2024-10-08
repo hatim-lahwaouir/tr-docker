@@ -4,7 +4,6 @@ import { axiosAuth } from '../api/axiosAuth';
 import { port, theHost } from '../config';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import { useCookies } from 'react-cookie';
 
 interface ProfileContextType {
   username: string;
@@ -74,7 +73,7 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 	const [dataHistory, setDataHistory] = useState<HistoryGame[]>([]);
 	const [dataGame, setDataGame] = useState<DataGame>({game:0, win:0, lose:0});
   const navigate = useNavigate();
-  const [cookies] = useCookies(['userData']);
+
 
 
   const pingPongFetchHistory = async (): Promise<HistoryGame[]> => {

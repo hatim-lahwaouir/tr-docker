@@ -48,13 +48,5 @@ services:
 volumes:
   media:
   postgres_data:
-  # frontend:
-  backend:
-    name: db_vol
-    driver: local
-    driver_opts:
-      type: bind
-      device: $(pwd)/tr-docker/src/backend/app
-      o: bind
 networks:
   netw:
