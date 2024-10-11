@@ -141,9 +141,9 @@ const Game: React.FC = () => {
             return newScore;
           });
           setRoundResult(data.status);
-          setShowResultPopup(true); // Show the result popup
+          setShowResultPopup(true);
           setTimeout(() => {
-            setShowResultPopup(false); // Hide the popup after 2 seconds
+            setShowResultPopup(false);
             if (!data.last) {
               setTimeout(startNextRound, 1500);
             }

@@ -75,7 +75,6 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const navigate = useNavigate();
 
 
-
   const pingPongFetchHistory = async (): Promise<HistoryGame[]> => {
     
 		try {

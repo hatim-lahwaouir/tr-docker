@@ -15,6 +15,7 @@ import { useWebSocketContext } from '../../context/WebSocketContext'
 import { port, theHost } from '../../config'
 import { toast } from 'react-toastify';
 import { axiosAuth } from '../../api/axiosAuth'
+import { useProfileContext } from '../../context/ProfileContext'
 
 interface ProfileInfoProps {
 	onClose: () => void;
@@ -32,7 +33,8 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ onClose }) => {
 	const ChatInfo = useChatContext();
 	const navigate = useNavigate();
 	const { inviteToGame } = useGameContext();
-	const { blockUser } = useWebSocketContext();
+	const { blockUser, unblockUser } = useWebSocketContext();
+	const profileInfo = useProfileContext();
 
 	const handleViewProfile = () => {
 		if (ChatInfo.selectedUserChat?.id) {
@@ -86,9 +88,18 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ onClose }) => {
 		}
 	}
     
-	const handleBlock = () => {
+	const handleBlockAndUnblock = () => {
+		console.log(profileInfo.friendState);
+		
 		if (ChatInfo.selectedUserChat) {
-			blockUser(ChatInfo.selectedUserChat.id.toString());
+			if (profileInfo.friendState === 'blocked' && profileInfo.byMe) {
+				profileInfo.setFriendState('notFriends');
+				unblockUser(ChatInfo.selectedUserChat.id.toString());
+			}
+			else if (profileInfo.friendState === 'notFriends' || profileInfo.friendState === 'friends') {
+				profileInfo.setFriendState('blocked');
+				blockUser(ChatInfo.selectedUserChat.id.toString());
+			}
 		}
 	}
     
@@ -146,14 +157,14 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({ onClose }) => {
 						</div>
 					</button>
 
-					<button onClick={handleBlock}>
+					<button onClick={handleBlockAndUnblock}>
 						<div className='flex gap-4 p-4'>
 							<div>
 								<img src={barInfo.isDark ? BlockW : BlockB} alt="block"
 									className='w-6 h-6' />
 							</div>
 							<div>
-								Block
+							{(profileInfo.friendState === 'blocked' && profileInfo.byMe) ? 'Unblock' : 'Block' }
 							</div>
 						</div>
 					</button>
