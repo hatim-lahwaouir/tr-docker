@@ -41,8 +41,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Username can contains only digits and alpha')
         if len(value) > 30 or len(value) < 3:
             raise serializers.ValidationError('Invalid username (max length is 30) (min length is 3)')
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError('Username already exists')
         return value
     
     def validate_full_name(self, value):

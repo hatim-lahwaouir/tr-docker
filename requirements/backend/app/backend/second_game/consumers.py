@@ -173,7 +173,7 @@ class Game(WebsocketConsumer):
 
 
 
-    def start_timeout(self, timeout=5):
+    def start_timeout(self, timeout=8):
         """Start a timer to disconnect if second player doesn't join in time."""
         def timeout_action():
             game = SGame.objects.filter(pk = self.gameId).first()
@@ -447,12 +447,12 @@ class Game(WebsocketConsumer):
     def reset_inactive_user(self):
         if hasattr(self, 'InvactiveUserTimer'):
             self.InvactiveUserTimer.cancel()
-        self.InvactiveUserTimer = threading.Timer(10, self.inactiveUserReply)
+        self.InvactiveUserTimer = threading.Timer(15, self.inactiveUserReply)
         self.InvactiveUserTimer.start()
 
 
     def inactive_user(self):
-        self.InvactiveUserTimer = threading.Timer(10, self.inactiveUserReply)
+        self.InvactiveUserTimer = threading.Timer(15, self.inactiveUserReply)
         self.InvactiveUserTimer.start()
 
 
